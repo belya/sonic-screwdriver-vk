@@ -18,7 +18,8 @@ class App extends React.Component {
 			activePanel: 'home',
 			fetchedUser: null,
 			userWall: null,
-			userToken: null
+			userToken: null,
+			currentNoise: null,
 		};
 	}
 
@@ -46,13 +47,14 @@ class App extends React.Component {
             }
         });
         this.setState({userWall: wallContent.response.items})
-        Noise.update(this.state.userWall)
+        var noise = await Noise.update(this.state.userWall)
+        this.setState({currentNoise: noise})
 	}
 
 	render() {
 		return (
 			<View activePanel={this.state.activePanel}>
-				<Home id="home" onClick={() => this.playNoise()} fetchedUser={this.state.fetchedUser} />
+				<Home id="home" onClick={() => this.playNoise()} fetchedUser={this.state.fetchedUser} currentNoise={this.state.currentNoise}/>
 			</View>
 		);
 	}

@@ -1,4 +1,4 @@
-const API_URL = "https://95.213.38.2:5000/similar"
+const API_URL = "https://localhost:5000/similar"
 
 var Noise = {
     audios: [],
@@ -32,10 +32,10 @@ var Noise = {
     },
     update: async function(posts) {
         Noise.stopNoise()
-        var noiseId = await Noise.updateNoise(posts)
-        console.log(noiseId)
-        Noise.loadNoise(noiseId)
+        var noise = await Noise.updateNoise(posts)
+        Noise.loadNoise(noise["id"])
         Noise.playNoise()
+        return noise
     }
 }
 

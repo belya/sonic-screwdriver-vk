@@ -67,7 +67,7 @@ def get_similar_noises(post):
 
     best_indices = np.argsort(-weights, axis=1)
 
-    return noises_df.iloc[best_indices[0, :3]]["id"].tolist()
+    return noises_df.iloc[best_indices[0, :3]][["id", "title", "text", "image"]].to_dict(orient='records')
 
 
 load_models()
