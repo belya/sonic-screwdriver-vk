@@ -1,0 +1,6 @@
+nose
+tensorflow
+tensorflow_hub
+pandas
+tqdm
+flask_cors
