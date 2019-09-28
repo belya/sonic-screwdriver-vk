@@ -8,8 +8,12 @@ var Noise = {
         return posts.map(x => x.text).join(". ")
     },
     createBody: function(post) {
+        var postText = post.text
+        if (postText.length == 0) {
+            postText = "default post text"
+        }
         return {
-            "text": post.text,
+            "text": postText,
             "image": post.firstImage
         }
     },
@@ -40,10 +44,10 @@ var Noise = {
     playNoise: function() {
         Noise.promises = Noise.audios.map(e => e.play())
     },
-    update: async function(post) {
-        Noise.stopNoise()
+    update: async function(post, index) {
+        // Noise.stopNoise()
         var noises = await Noise.updateNoises(post)
-        Noise.loadNoise(noises[0]["id"])
+        Noise.loadNoise(noises[index]["id"])
         Noise.playNoise()
         return noises
     }

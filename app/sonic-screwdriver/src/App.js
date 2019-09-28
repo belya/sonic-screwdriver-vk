@@ -1,6 +1,6 @@
 import React from 'react';
 import connect from '@vkontakte/vk-connect';
-import { View } from '@vkontakte/vkui';
+import { View, ScreenSpinner } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
 import Home from './panels/Home';
@@ -21,7 +21,9 @@ class App extends React.Component {
 			userToken: null,
 			currentNoises: [],
             currentPost: 0,
-            firstRun: true
+            firstRun: true,
+            loading: false,
+            currentNoiseIndex: null,
 		};
 	}
 
@@ -37,6 +39,7 @@ class App extends React.Component {
 	}
 
     async fillWall() {
+        this.setState({loading: true})
         var wallContent = await connect.sendPromise(
             "VKWebAppCallAPIMethod", {
                 "method": "wall.get", 
@@ -51,8 +54,8 @@ class App extends React.Component {
         this.addFirstImages(wallContent.response.items)
         var filteredPosts = wallContent.response.items.filter(x => x.firstImage)
         this.setState({userWall: filteredPosts})
-        this.playNoise()
-        this.setState({firstRun: false})
+        await this.playNoise(0)
+        this.setState({firstRun: false, loading: false})
     }
 
     addFirstImages(wall) {
@@ -68,16 +71,35 @@ class App extends React.Component {
         })
     }
 
-	async playNoise() {
+	async playNoise(index) {
         if (this.state.userWall.length == 0) 
             return
-        var noises = await Noise.update(this.state.userWall[this.state.currentPost])
+
+        Noise.stopNoise()
+
+        await this.setState({
+            loading: true,
+            currentNoiseIndex: index
+        })
+
+        if (index === null) {
+            this.setState({loading: false})
+            return
+        }
+
+        var noises = await Noise.update(
+            this.state.userWall[this.state.currentPost],
+            this.state.currentNoiseIndex
+        )
         noises.forEach(x => x.image = x.image.replace('bg.jpg','fb.jpg'))
-        this.setState({currentNoises: noises})
+        this.setState({
+            currentNoises: noises, 
+            loading: false
+        })
 	}
 
 	async shareNoise() {
-		var noise = this.state.currentNoises[0]
+		var noise = this.state.currentNoises[this.state.currentNoiseIndex]
 
 		var message ="Hey, check it out! The '" + noise["title"] + "' soundset is a perfect ambient for my post.\n\n"
         if (this.state.userWall[this.state.currentPost].text) {
@@ -101,16 +123,28 @@ class App extends React.Component {
 	}
 
     async switchPost(direction) {
-        console.log(this.state.currentPost)
         await this.setState({
             currentPost: Math.abs(this.state.currentPost + direction) % this.state.userWall.length
         })
-        this.playNoise()
+        this.playNoise(0)
+    }
+
+    loadingMessage() {
+        if (!this.state.loading)
+            return null
+        return (<ScreenSpinner />)
+    }
+
+    changeNoiseIndex(index) {
+        var newIndex = index
+        if (this.state.currentNoiseIndex == index)
+            var newIndex = null
+        this.playNoise(newIndex)
     }
 
 	render() {
 		return (
-			<View activePanel={this.state.activePanel}>
+			<View popout={this.loadingMessage()} activePanel={this.state.activePanel}>
 				<Home id="home" 
                     firstRun={this.state.firstRun}
                     onStart={() => this.fillWall()} 
@@ -118,6 +152,8 @@ class App extends React.Component {
 
                     currentNoises={this.state.currentNoises} 
                     onShare={() => this.shareNoise()}
+                    currentNoiseIndex={this.state.currentNoiseIndex}
+                    onCurrentNoiseChange={(index) => this.changeNoiseIndex(index)}
 
                     onNext={() => this.switchPost(1)}
                     onPrev={() => this.switchPost(-1)}

@@ -3,28 +3,30 @@ import PropTypes from 'prop-types';
 import { Panel, ListItem, Group, Button, Div, Avatar, PanelHeader } from '@vkontakte/vkui';
 
 
-const Noise = ({currentNoises, onShare}) => {
+const Noise = ({currentNoises, currentNoiseIndex, onShare, onCurrentNoiseChange}) => {
     if (currentNoises.length > 0) {
         return (<Group title="Recommended ambient">
-            {currentNoises.map(currentNoise => (<ListItem
+            {currentNoises.map((currentNoise, index) => (<ListItem
                 before=<Avatar type="image" src={currentNoise.image}/>
                 description={currentNoise.text}
                 key={currentNoise.id}
+                onClick={() => onCurrentNoiseChange(index)}
+                style={index == currentNoiseIndex ? {'background': "rgba(0,57,115,0.1)"} : null}
             >
                 {currentNoise.title}
             </ListItem>))}
-            <Div>
+            {currentNoiseIndex !== null && <Div>
                 <Button size="xl" level="secondary" onClick={onShare}>Share</Button>
-            </Div>
+            </Div>}
         </Group>)
-    }
-    else {
+    } else {
         return ""
     }
 };
 
 Noise.propTypes = {
     onShare: PropTypes.func,
+    onCurrentNoiseChange: PropTypes.func,
     currentNoises: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string,
