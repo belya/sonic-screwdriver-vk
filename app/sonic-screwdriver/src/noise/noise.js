@@ -13,14 +13,13 @@ var Noise = {
             "image": post.firstImage
         }
     },
-    updateNoise: function(post) {
+    updateNoises: function(post) {
         var postBody = Noise.createBody(post)
         return fetch(API_URL, {
             "method": "POST",
             "body": JSON.stringify(postBody)
         })
         .then(x => x.json())
-        .then(x => x[0])
     },
     stopNoise: function() {
         Noise.audios.map((audio, i) => {
@@ -43,10 +42,10 @@ var Noise = {
     },
     update: async function(post) {
         Noise.stopNoise()
-        var noise = await Noise.updateNoise(post)
-        Noise.loadNoise(noise["id"])
+        var noises = await Noise.updateNoises(post)
+        Noise.loadNoise(noises[0]["id"])
         Noise.playNoise()
-        return noise
+        return noises
     }
 }
 

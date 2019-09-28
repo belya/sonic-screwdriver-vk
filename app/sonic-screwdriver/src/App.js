@@ -19,7 +19,7 @@ class App extends React.Component {
 			fetchedUser: null,
 			userWall: [],
 			userToken: null,
-			currentNoise: null,
+			currentNoises: [],
             currentPost: 0,
             firstRun: true
 		};
@@ -48,9 +48,9 @@ class App extends React.Component {
                     "access_token": this.state.userToken
             }
         });
-        var posts = wallContent.response.items.filter(x => x.attachments)
-        this.addFirstImages(posts)
-        this.setState({userWall: posts})
+        this.addFirstImages(wallContent.response.items)
+        var filteredPosts = wallContent.response.items.filter(x => x.firstImage)
+        this.setState({userWall: filteredPosts})
         this.playNoise()
         this.setState({firstRun: false})
     }
@@ -59,25 +59,27 @@ class App extends React.Component {
         wall.forEach((e) => {
             if (e.attachments) {
                 var photos = e.attachments.filter(x => x.type == "photo")
-                console.log(photos)
-                var firstPhoto = photos[0].photo.sizes.filter(p => p.type == "x")[0].url
-                e.firstImage = firstPhoto
+                if (photos.length > 0) {
+                    var firstPhoto = photos[0].photo.sizes.filter(p => p.type == "x")[0].url
+                    e.firstImage = firstPhoto
+                }
             }
         })
     }
 
 	async playNoise() {
-        var noise = await Noise.update(this.state.userWall[this.state.currentPost])
-        console.log(noise)
-        this.setState({currentNoise: noise})
+        var noises = await Noise.update(this.state.userWall[this.state.currentPost])
+        noises.forEach(x => x.image = x.image.replace('bg.jpg','fb.jpg'))
+        this.setState({currentNoises: noises})
 	}
 
 	async shareNoise() {
-		var noise = this.state.currentNoise
-		var message ="My favourite noise is " + noise["title"] + ". \n\n What about your? Check it in Sonic Screwdriver app!"
+		var noise = this.state.currentNoises[0]
+		var message ="Hey, check it out! The '" + noise["title"] + "' soundset is a perfect ambient for my post.\n\nYou can do the same in the Sonic Screwdriver app!"
 		await connect.sendPromise("VKWebAppShowWallPostBox", {
 			"message": message,
-			"attachments": "https://m.vk.com/app" + APP_ID
+            "attachments": this.state.userWall[this.state.currentPost].id,
+			// "attachments": "https://m.vk.com/app" + APP_ID
 		});
 	}
 
@@ -97,7 +99,7 @@ class App extends React.Component {
                     onStart={() => this.fillWall()} 
                     fetchedUser={this.state.fetchedUser} 
 
-                    currentNoise={this.state.currentNoise} 
+                    currentNoises={this.state.currentNoises} 
                     onShare={() => this.shareNoise()}
 
                     onNext={() => this.switchPost(1)}

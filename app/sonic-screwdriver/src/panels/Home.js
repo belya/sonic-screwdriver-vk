@@ -6,7 +6,7 @@ import Noise from '../components/Noise';
 import User from '../components/User';
 import Post from '../components/Post';
 
-const Home = ({ id, fetchedUser, userWall, currentPost, onStart, currentNoise, onShare, onNext, onPrev, firstRun }) => (
+const Home = ({ id, fetchedUser, userWall, currentPost, onStart, currentNoises, onShare, onNext, onPrev, firstRun }) => (
 	<Panel id={id}>
 		<PanelHeader>Sonic Screwdriver</PanelHeader>
 		<User fetchedUser={fetchedUser} onStart={onStart} firstRun={firstRun} />
@@ -16,7 +16,7 @@ const Home = ({ id, fetchedUser, userWall, currentPost, onStart, currentNoise, o
 			onNext={onNext} 
 			onPrev={onPrev} 
 		/>
-		<Noise currentNoise={currentNoise} onShare={onShare} />
+		<Noise currentNoises={currentNoises} onShare={onShare} />
 	</Panel>
 );
 
@@ -40,11 +40,13 @@ Home.propTypes = {
 			firstImage: PropTypes.string
 		})
 	),
-	currentNoise: PropTypes.shape({
-		title: PropTypes.string,
-		image: PropTypes.string,
-		text: PropTypes.string,
-	})
+	currentNoises: PropTypes.arrayOf(
+		PropTypes.shape({
+			title: PropTypes.string,
+			image: PropTypes.string,
+			text: PropTypes.string,
+		})
+	)
 };
 
 export default Home;
