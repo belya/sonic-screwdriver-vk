@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.contrib.fixers import ProxyFix
-from actions import embeddings
+from actions.text_embeddings import TextEmbeddings
 
 app = Flask(__name__)
 CORS(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
+embeddings = TextEmbeddings()
 
 
 @app.route('/similar', methods=['POST'])
