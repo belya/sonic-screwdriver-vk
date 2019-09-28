@@ -8,7 +8,8 @@ class TextEmbeddings(Embeddings):
     def _load_model(self):
         self.session = tf.Session()
         self.sentences = tf.placeholder(tf.string)
-        self.elmo = hub.Module("http://files.deeppavlov.ai/deeppavlov_data/elmo_ru-news_wmt11-16_1.5M_steps.tar.gz", trainable=False)
+        # self.elmo = hub.Module("http://files.deeppavlov.ai/deeppavlov_data/elmo_ru-news_wmt11-16_1.5M_steps.tar.gz", trainable=False)
+        self.elmo = hub.Module("https://tfhub.dev/google/elmo/1", trainable=True)
         self.embeddings = self.elmo(self.sentences)
         self.session.run(tf.global_variables_initializer())
 

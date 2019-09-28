@@ -33,7 +33,7 @@ class Embeddings:
     def _get_embedding(self, post):
         raise Exception("Not implemented")
 
-    def get_similar_noises(self, post):
+    def get_distances(self, post):
         test_embeddings = self._get_embedding(post)
 
         norm_embeddings = (self.noise_embeddings ** 2).sum(axis=1) ** 0.5
@@ -44,6 +44,10 @@ class Embeddings:
         dot_products = test_embeddings @ self.noise_embeddings.T
 
         weights = dot_products / norm_products
+        return weights
+
+    def get_similar_noises(self, post):
+        weights = self.get_distances(post)
 
         best_indices = np.argsort(-weights, axis=1)
 
