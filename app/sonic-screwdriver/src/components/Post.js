@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Panel, ListItem, Group, Button, Div, Avatar, PanelHeader } from '@vkontakte/vkui';
+import { Panel, ListItem, Group, Button, Div, Avatar, PanelHeader, Gallery } from '@vkontakte/vkui';
 
 
 const Post = ({userWall, currentPost, onNext, onPrev}) => {
@@ -8,13 +8,13 @@ const Post = ({userWall, currentPost, onNext, onPrev}) => {
 
         return (<Group title="Post from wall">
             {userWall[currentPost].firstImage && <Div>
-                <img src={userWall[currentPost].firstImage}/>
+                <img style={{width: "50%", display: "block", margin: "auto"}}src={userWall[currentPost].firstImage}/>
             </Div>}
-            <Div>
+            {userWall[currentPost].text && <Div>
                 {userWall[currentPost].text}
-            </Div>
+            </Div>}
             <Div style={{display: 'flex'}}>
-                {currentPost < userWall.length && <Button size="l" stretched style={{ marginRight: 8 }} onClick={onNext}>Next</Button>}
+                {(currentPost < userWall.length - 1) && <Button size="l" stretched style={{ marginRight: 8 }} onClick={onNext}>Next</Button>}
                 {currentPost > 0 && <Button size="l" stretched level="secondary" onClick={onPrev}>Previous</Button>}
             </Div>
         </Group>)

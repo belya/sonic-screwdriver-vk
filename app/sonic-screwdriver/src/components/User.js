@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Panel, ListItem, Group, Button, Div, Avatar, PanelHeader } from '@vkontakte/vkui';
 
 
-const User = ({fetchedUser, onStart}) => {
+const User = ({fetchedUser, onStart, firstRun}) => {
     if (fetchedUser) {
         return (<Group title="User">
             <ListItem
@@ -12,9 +12,9 @@ const User = ({fetchedUser, onStart}) => {
             >
                 {`${fetchedUser.first_name} ${fetchedUser.last_name}`}
             </ListItem>
-            <Div>
-                <Button size="xl" level="secondary" onClick={onStart}>Listen</Button>
-            </Div>
+            {firstRun && <Div>
+                <Button size="xl" onClick={onStart}>Start!</Button>
+            </Div>}
         </Group>)
     }
     else {
@@ -24,6 +24,7 @@ const User = ({fetchedUser, onStart}) => {
 
 User.propTypes = {
     onStart: PropTypes.func,
+    firstRun: PropTypes.bool,
     fetchedUser: PropTypes.shape({
         photo_200: PropTypes.string,
         first_name: PropTypes.string,

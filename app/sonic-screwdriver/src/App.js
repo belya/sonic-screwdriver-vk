@@ -20,7 +20,8 @@ class App extends React.Component {
 			userWall: [],
 			userToken: null,
 			currentNoise: null,
-            currentPost: 0
+            currentPost: 0,
+            firstRun: true
 		};
 	}
 
@@ -51,13 +52,15 @@ class App extends React.Component {
         this.addFirstImages(posts)
         this.setState({userWall: posts})
         this.playNoise()
+        this.setState({firstRun: false})
     }
 
     addFirstImages(wall) {
         wall.forEach((e) => {
             if (e.attachments) {
                 var photos = e.attachments.filter(x => x.type == "photo")
-                var firstPhoto = photos[0].photo.sizes.filter(p => p.type == "m")[0].url
+                console.log(photos)
+                var firstPhoto = photos[0].photo.sizes.filter(p => p.type == "x")[0].url
                 e.firstImage = firstPhoto
             }
         })
@@ -90,6 +93,7 @@ class App extends React.Component {
 		return (
 			<View activePanel={this.state.activePanel}>
 				<Home id="home" 
+                    firstRun={this.state.firstRun}
                     onStart={() => this.fillWall()} 
                     fetchedUser={this.state.fetchedUser} 
 

@@ -6,10 +6,10 @@ import Noise from '../components/Noise';
 import User from '../components/User';
 import Post from '../components/Post';
 
-const Home = ({ id, fetchedUser, userWall, currentPost, onStart, currentNoise, onShare, onNext, onPrev }) => (
+const Home = ({ id, fetchedUser, userWall, currentPost, onStart, currentNoise, onShare, onNext, onPrev, firstRun }) => (
 	<Panel id={id}>
 		<PanelHeader>Sonic Screwdriver</PanelHeader>
-		<User fetchedUser={fetchedUser} onStart={onStart} />
+		<User fetchedUser={fetchedUser} onStart={onStart} firstRun={firstRun} />
 		<Post 
 			userWall={userWall} 
 			currentPost={currentPost} 
@@ -25,6 +25,7 @@ Home.propTypes = {
 	onStart: PropTypes.func,
 	onShare: PropTypes.func,
 	currentPost: PropTypes.number,
+	firstRun: PropTypes.bool,
 	fetchedUser: PropTypes.shape({
 		photo_200: PropTypes.string,
 		first_name: PropTypes.string,

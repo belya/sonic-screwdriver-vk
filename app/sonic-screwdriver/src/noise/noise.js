@@ -1,8 +1,9 @@
-const API_URL = "https://95.213.38.2:5000/similar"
-// const API_URL = "https://localhost:5000/similar"
+// const API_URL = "https://95.213.38.2:5000/similar"
+const API_URL = "https://localhost:5000/similar"
 
 var Noise = {
     audios: [],
+    promises: [],
     joinTexts: function(posts) {
         return posts.map(x => x.text).join(". ")
     },
@@ -22,7 +23,12 @@ var Noise = {
         .then(x => x[0])
     },
     stopNoise: function() {
-        Noise.audios.map(e => e.pause())
+        Noise.audios.map((audio, i) => {
+            if (Noise.promises[i]) {
+                Noise.promises[i].then(_ => audio.pause())
+            }
+        })
+        Noise.promises = []
         Noise.audios = []
     },
     loadNoise: function(noiseId) {
@@ -33,7 +39,7 @@ var Noise = {
         Noise.audios.map(e => e.load())
     },
     playNoise: function() {
-        Noise.audios.map(e => e.play())
+        Noise.promises = Noise.audios.map(e => e.play())
     },
     update: async function(post) {
         Noise.stopNoise()
