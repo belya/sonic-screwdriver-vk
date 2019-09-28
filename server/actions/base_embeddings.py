@@ -10,7 +10,7 @@ class Embeddings:
 
     def __init__(self):
         self.full_embeddings_path = EMBEDDINGS_PATH.format(self.embeddings_path)
-        self.noises_df = pd.read_csv("../embeddings/noises_with_translation.csv")
+        self.noises_df = pd.read_csv("./data/noises_with_translation.csv")
         self._load_model()
         self._cache_embeddings()
 
