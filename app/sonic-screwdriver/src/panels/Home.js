@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Panel, ListItem, Group, Button, Div, Avatar, PanelHeader } from '@vkontakte/vkui';
 
-const Home = ({ id, fetchedUser, userWall, onClick, currentNoise }) => (
+const Home = ({ id, fetchedUser, userWall, onClick, currentNoise, onShare }) => (
 	<Panel id={id}>
 		<PanelHeader>Sonic Screwdriver</PanelHeader>
 		{fetchedUser &&
@@ -25,6 +25,9 @@ const Home = ({ id, fetchedUser, userWall, onClick, currentNoise }) => (
 			>
 				{currentNoise.title}
 			</ListItem>
+			<Div>
+				<Button size="xl" level="secondary" onClick={onShare}>Share</Button>
+			</Div>
 		</Group>}
 	</Panel>
 );

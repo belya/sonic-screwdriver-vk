@@ -51,10 +51,19 @@ class App extends React.Component {
         this.setState({currentNoise: noise})
 	}
 
+	async shareNoise() {
+		var noise = this.state.currentNoise
+		var message ="My favourite noise is " + noise["title"] + ". \n\n What about your? Check it in Sonic Screwdriver app!"
+		await connect.sendPromise("VKWebAppShowWallPostBox", {
+			"message": message,
+			"attachments": "https://m.vk.com/app" + APP_ID
+		});
+	}
+
 	render() {
 		return (
 			<View activePanel={this.state.activePanel}>
-				<Home id="home" onClick={() => this.playNoise()} fetchedUser={this.state.fetchedUser} currentNoise={this.state.currentNoise}/>
+				<Home id="home" onClick={() => this.playNoise()} fetchedUser={this.state.fetchedUser} currentNoise={this.state.currentNoise} onShare={() => this.shareNoise()}/>
 			</View>
 		);
 	}
