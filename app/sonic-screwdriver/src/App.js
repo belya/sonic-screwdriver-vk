@@ -69,6 +69,8 @@ class App extends React.Component {
     }
 
 	async playNoise() {
+        if (this.state.userWall.length == 0) 
+            return
         var noises = await Noise.update(this.state.userWall[this.state.currentPost])
         noises.forEach(x => x.image = x.image.replace('bg.jpg','fb.jpg'))
         this.setState({currentNoises: noises})

@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Panel, ListItem, Group, Button, Div, Avatar, PanelHeader, Gallery } from '@vkontakte/vkui';
 
 
-const Post = ({userWall, currentPost, onNext, onPrev}) => {
+const Post = ({firstRun, userWall, currentPost, onNext, onPrev}) => {
     if (userWall.length > 0) {
-
         return (<Group title="Post from wall">
             {userWall[currentPost].firstImage && <Div>
                 <img style={{width: "50%", display: "block", margin: "auto"}}src={userWall[currentPost].firstImage}/>
@@ -20,13 +19,20 @@ const Post = ({userWall, currentPost, onNext, onPrev}) => {
         </Group>)
     }
     else {
-        return ""
+        if (!firstRun)
+            return (<Group title="Empty wall"><Div>
+                You have no posts with at least one attached picture on a wall. Please, add something and return!
+            </Div></Group>)
+        else {
+            return ""
+        }
     }
 };
 
 Post.propTypes = {
     onNext: PropTypes.func,
     onPrev: PropTypes.func,
+    firstRun: PropTypes.bool,
     currentPost: PropTypes.number,
     userWall: PropTypes.arrayOf(
         PropTypes.shape({

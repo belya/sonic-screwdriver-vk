@@ -15,6 +15,7 @@ const Home = ({ id, fetchedUser, userWall, currentPost, onStart, currentNoises, 
 			currentPost={currentPost} 
 			onNext={onNext} 
 			onPrev={onPrev} 
+			firstRun={firstRun}
 		/>
 		<Noise currentNoises={currentNoises} onShare={onShare} />
 	</Panel>
