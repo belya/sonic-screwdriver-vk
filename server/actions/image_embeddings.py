@@ -16,7 +16,6 @@ graph = tf.get_default_graph()
 
 class ImageEmbeddings(Embeddings):
     embeddings_path = "image"
-    tmp_img_path = 'tmp.jpg'
 
     def _load_model(self):
         global graph, session
@@ -36,7 +35,7 @@ class ImageEmbeddings(Embeddings):
     def _get_embedding(self, post):
         global graph, session
 
-        img_url = post["image"]
+        img_url = post["image"].replace('/bg.jpg','/fb.jpg')
         tmp_img_path = self.generate_tmp_file()
         urllib.request.urlretrieve(img_url, tmp_img_path)
         img = image.load_img(tmp_img_path, target_size=(224, 224))
