@@ -20,9 +20,10 @@ class Embeddings:
     def _cache_embeddings(self):
         if not os.path.isfile(self.full_embeddings_path):
             noise_embeddings_list = []
-            for text in tqdm(self.noises_df["translation"]):
+            for i, row in tqdm(self.noises_df.iterrows(), total=self.noises_df.shape[0]):
                 vector = self._get_embedding({
-                    "text": text
+                    "image": row["image"],
+                    "text": row["translation"]
                 })
                 noise_embeddings_list.append(vector)
             self.noise_embeddings = np.vstack(noise_embeddings_list)

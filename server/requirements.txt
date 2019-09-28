@@ -4,3 +4,5 @@ tensorflow_hub
 pandas
 tqdm
 flask_cors
+keras
+Pillow
