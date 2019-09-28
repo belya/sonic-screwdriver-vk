@@ -47,4 +47,4 @@ class Embeddings:
 
         best_indices = np.argsort(-weights, axis=1)
 
-        return self.noises_df.iloc[best_indices[0, :3]][["id", "title", "text", "image"]].to_dict(orient='records')
+        return self.noises_df.iloc[best_indices[0, :3]][["id", "url", "title", "text", "image"]].to_dict(orient='records')
