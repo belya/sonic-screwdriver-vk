@@ -62,6 +62,7 @@ class App extends React.Component {
                 if (photos.length > 0) {
                     var firstPhoto = photos[0].photo.sizes.filter(p => p.type == "x")[0].url
                     e.firstImage = firstPhoto
+                    e.firstImageId = photos[0].photo.id
                 }
             }
         })
@@ -75,11 +76,25 @@ class App extends React.Component {
 
 	async shareNoise() {
 		var noise = this.state.currentNoises[0]
-		var message ="Hey, check it out! The '" + noise["title"] + "' soundset is a perfect ambient for my post.\n\nYou can do the same in the Sonic Screwdriver app!"
+
+		var message ="Hey, check it out! The '" + noise["title"] + "' soundset is a perfect ambient for my post.\n\n"
+        if (this.state.userWall[this.state.currentPost].text) {
+            message += '"' + this.state.userWall[this.state.currentPost].text + '"'
+        }
+        message += "\n\nYou can do the same in the Sonic Screwdriver app!"
+
+        var attachments = ""
+        var firstImageId = this.state.userWall[this.state.currentPost].firstImageId
+        if (firstImageId) {
+            attachments = ",photo" + this.state.fetchedUser.id + "_" + firstImageId
+        }
+
+        attachments = this.state.currentNoises[0].url + attachments
+        console.log(attachments)
+
 		await connect.sendPromise("VKWebAppShowWallPostBox", {
 			"message": message,
-            "attachments": this.state.userWall[this.state.currentPost].id,
-			// "attachments": "https://m.vk.com/app" + APP_ID
+			"attachments": attachments
 		});
 	}
 

@@ -1,5 +1,5 @@
-// const API_URL = "https://95.213.38.2:5000/similar"
-const API_URL = "https://localhost:5000/similar"
+const API_URL = "https://95.213.38.2:5000/similar"
+// const API_URL = "https://localhost:5000/similar"
 
 var Noise = {
     audios: [],

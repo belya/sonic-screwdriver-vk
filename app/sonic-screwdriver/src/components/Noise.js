@@ -9,6 +9,7 @@ const Noise = ({currentNoises, onShare}) => {
             {currentNoises.map(currentNoise => (<ListItem
                 before=<Avatar type="image" src={currentNoise.image}/>
                 description={currentNoise.text}
+                key={currentNoise.id}
             >
                 {currentNoise.title}
             </ListItem>))}
@@ -26,6 +27,7 @@ Noise.propTypes = {
     onShare: PropTypes.func,
     currentNoises: PropTypes.arrayOf(
         PropTypes.shape({
+            id: PropTypes.string,
             title: PropTypes.string,
             image: PropTypes.string,
             text: PropTypes.string,
