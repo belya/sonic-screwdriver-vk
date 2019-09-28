@@ -47,8 +47,9 @@ class App extends React.Component {
                     "access_token": this.state.userToken
             }
         });
-        this.addFirstImages(wallContent.response.items)
-        this.setState({userWall: wallContent.response.items})
+        var posts = wallContent.response.items.filter(x => x.attachments)
+        this.addFirstImages(posts)
+        this.setState({userWall: posts})
         this.playNoise()
     }
 
