@@ -6,25 +6,24 @@ var Noise = {
     joinTexts: function(posts) {
         return posts.map(x => x.text).join(". ")
     },
+    createBody: function(post) {
+        return {
+            "text": post.text,
+            "image": post.firstImage
+        }
+    },
     updateNoise: function(post) {
-        var joinedText = post.text // Noise.joinTexts(posts)
+        var postBody = Noise.createBody(post)
         return fetch(API_URL, {
             "method": "POST",
-            "body": JSON.stringify({
-                "text": joinedText
-            })
+            "body": JSON.stringify(postBody)
         })
         .then(x => x.json())
         .then(x => x[0])
     },
     stopNoise: function() {
-        try {
-            Noise.audios.map(e => e.pause())
-            Noise.audios = []
-        }
-        catch (error) {
-            
-        }
+        Noise.audios.map(e => e.pause())
+        Noise.audios = []
     },
     loadNoise: function(noiseId) {
         for (var i = 0; i < 10; i++) {

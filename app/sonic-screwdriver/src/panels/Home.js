@@ -35,7 +35,8 @@ Home.propTypes = {
 	}),
 	userWall: PropTypes.arrayOf(
 		PropTypes.shape({
-			text: PropTypes.string
+			text: PropTypes.string,
+			firstImage: PropTypes.string
 		})
 	),
 	currentNoise: PropTypes.shape({

@@ -5,7 +5,11 @@ import { Panel, ListItem, Group, Button, Div, Avatar, PanelHeader } from '@vkont
 
 const Post = ({userWall, currentPost, onNext, onPrev}) => {
     if (userWall.length > 0) {
+
         return (<Group title="Post from wall">
+            {userWall[currentPost].firstImage && <Div>
+                <img src={userWall[currentPost].firstImage}/>
+            </Div>}
             <Div>
                 {userWall[currentPost].text}
             </Div>
@@ -26,7 +30,8 @@ Post.propTypes = {
     currentPost: PropTypes.number,
     userWall: PropTypes.arrayOf(
         PropTypes.shape({
-            text: PropTypes.string
+            text: PropTypes.string,
+            firstImage: PropTypes.string
         })
     ),
 };

@@ -47,8 +47,19 @@ class App extends React.Component {
                     "access_token": this.state.userToken
             }
         });
+        this.addFirstImages(wallContent.response.items)
         this.setState({userWall: wallContent.response.items})
         this.playNoise()
+    }
+
+    addFirstImages(wall) {
+        wall.forEach((e) => {
+            if (e.attachments) {
+                var photos = e.attachments.filter(x => x.type == "photo")
+                var firstPhoto = photos[0].photo.sizes.filter(p => p.type == "m")[0].url
+                e.firstImage = firstPhoto
+            }
+        })
     }
 
 	async playNoise() {
