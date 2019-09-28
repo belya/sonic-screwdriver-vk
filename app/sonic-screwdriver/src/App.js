@@ -9,6 +9,7 @@ import Noise from './noise/noise'
 
 const APP_ID = 7150170
 const API_VERSION = "5.101"
+const DEFAULT_TIMEOUT = 10000
 
 class App extends React.Component {
 	constructor(props) {
@@ -37,6 +38,17 @@ class App extends React.Component {
 		});
 		this.setState({userToken: authToken.access_token})
 	}
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.loading && !this.state.loading) {
+            clearTimeout(this.timer)
+        }
+        else if (!prevState.loading && this.state.loading) {
+            this.timer = setTimeout(() => {
+                this.setState({loading: false})
+            }, DEFAULT_TIMEOUT)
+        }
+    }
 
     async fillWall() {
         this.setState({loading: true})
