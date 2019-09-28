@@ -17,9 +17,10 @@ class App extends React.Component {
 		this.state = {
 			activePanel: 'home',
 			fetchedUser: null,
-			userWall: null,
+			userWall: [],
 			userToken: null,
 			currentNoise: null,
+            currentPost: 0
 		};
 	}
 
@@ -34,20 +35,25 @@ class App extends React.Component {
 		this.setState({userToken: authToken.access_token})
 	}
 
-	async playNoise() {
-		var wallContent = await connect.sendPromise(
-        	"VKWebAppCallAPIMethod", {
+    async fillWall() {
+        var wallContent = await connect.sendPromise(
+            "VKWebAppCallAPIMethod", {
                 "method": "wall.get", 
                 "params": {
-                	"v": API_VERSION, 
-                	"owner_id": this.state.fetchedUser.id,
+                    "v": API_VERSION, 
+                    "owner_id": this.state.fetchedUser.id,
                     "count": 100, 
                     "filters": "owner", 
                     "access_token": this.state.userToken
             }
         });
         this.setState({userWall: wallContent.response.items})
-        var noise = await Noise.update(this.state.userWall)
+        this.playNoise()
+    }
+
+	async playNoise() {
+        var noise = await Noise.update(this.state.userWall[this.state.currentPost])
+        console.log(noise)
         this.setState({currentNoise: noise})
 	}
 
@@ -60,10 +66,29 @@ class App extends React.Component {
 		});
 	}
 
+    async switchPost(direction) {
+        console.log(this.state.currentPost)
+        await this.setState({
+            currentPost: Math.abs(this.state.currentPost + direction) % this.state.userWall.length
+        })
+        this.playNoise()
+    }
+
 	render() {
 		return (
 			<View activePanel={this.state.activePanel}>
-				<Home id="home" onClick={() => this.playNoise()} fetchedUser={this.state.fetchedUser} currentNoise={this.state.currentNoise} onShare={() => this.shareNoise()}/>
+				<Home id="home" 
+                    onStart={() => this.fillWall()} 
+                    fetchedUser={this.state.fetchedUser} 
+
+                    currentNoise={this.state.currentNoise} 
+                    onShare={() => this.shareNoise()}
+
+                    onNext={() => this.switchPost(1)}
+                    onPrev={() => this.switchPost(-1)}
+                    currentPost={this.state.currentPost}
+                    userWall={this.state.userWall}
+                />
 			</View>
 		);
 	}
